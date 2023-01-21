@@ -11,7 +11,7 @@ presence_sensor = 7
 smoke_sensor = 1
 windom_sensor = 12
 door_sensor = 16
-people_in_sensor = 20 
+people_in_sensor = 20  
 people_out_sensor = 21
 
 pins = [

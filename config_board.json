@@ -1,0 +1,42 @@
+{
+    "rasp42": {
+        "board": "rasp42",
+        "room": "01",
+        "ip_server": "164.41.98.16",
+        "port_server": "10025",
+        "port_ssh": "13508",
+        "type": "odd"
+    },
+    "rasp44": {
+        "board": "rasp44",
+        "room": "02",
+        "ip_server": "164.41.98.26",
+        "port_server": "10025",
+        "port_ssh": "13508",
+        "type": "even"
+    },
+    "rasp46": {
+        "board": "rasp46",
+        "room": "03",
+        "ip_server": "164.41.98.28",
+        "port_server": "10025",
+        "port_ssh": "13508",
+        "type": "odd"
+    },
+    "rasp43": {
+        "board": "rasp43",
+        "room": "04",
+        "ip_server": "164.41.98.15",
+        "port_server": "10025",
+        "port_ssh": "13508",
+        "type": "even"
+    },
+    "pc-quarto": {
+        "board": "pc-quarto",
+        "room": "04",
+        "ip_server": "127.0.0.1",
+        "port_ssh": "22",
+        "port_server": "8000",
+        "type": "odd"
+    }
+}

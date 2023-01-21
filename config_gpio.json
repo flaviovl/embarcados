@@ -1,0 +1,98 @@
+{
+    "LB1": {
+        "type": "device",
+        "name": "light_blulb_01",
+        "tag": "LB1",
+        "gpio1": 18,
+        "gpio2": 26,
+        "dir": "out"
+    },
+    "LB2": {
+        "type": "device",
+        "name": "light_blulb_02",
+        "tag": "LB2",
+        "gpio1": 23,
+        "gpio2": 19,
+        "dir": "out"
+    },
+    "MP": {
+        "type": "device",
+        "name": "multimedia_projector",
+        "tag": "MP",
+        "gpio1": 25,
+        "gpio2": 6,
+        "dir": "out"
+    },
+    "AC": {
+        "type": "device",
+        "name": "air_conditioner",
+        "tag": "AC",
+        "gpio1": 24,
+        "gpio2": 13,
+        "dir": "out"
+    },
+    "SA": {
+        "type": "device",
+        "name": "sirene_alarme",
+        "tag": "SA",
+        "gpio1": 8,
+        "gpio2": 5,
+        "dir": "out"
+    },
+    "MS": {
+        "type": "alarm_system",
+        "name": "motion_sensor",
+        "tag": "MS",
+        "gpio1": 7,
+        "gpio2": 0,
+        "dir": "in"
+    },
+    "SD": {
+        "type": "alarm_system",
+        "name": "smoke_detector",
+        "tag": "SD",
+        "gpio1": 1,
+        "gpio2": 11,
+        "dir": "in"
+    },
+    "WS": {
+        "type": "alarm_system",
+        "name": "window_sensor",
+        "tag": "WS",
+        "gpio1": 12,
+        "gpio2": 9,
+        "dir": "in"
+    },
+    "DS": {
+        "type": "alarm_system",
+        "name": "door_sensor",
+        "tag": "DS",
+        "gpio1": 16,
+        "gpio2": 10,
+        "dir": "in"
+    },
+    "PIS": {
+        "type": "occupancy",
+        "name": "people_in_sensor",
+        "tag": "PIS",
+        "gpio1": 20,
+        "gpio2": 22,
+        "dir": "in"
+    },
+    "POS": {
+        "type": "occupancy",
+        "name": "people_out_sensor",
+        "tag": "POS",
+        "gpio1": 21,
+        "gpio2": 17,
+        "dir": "in"
+    },
+    "THS": {
+        "type": "temperature",
+        "name": "temperature_humidity_sensor",
+        "tag": "THS",
+        "gpio1": 4,
+        "gpio2": 18,
+        "dir": "in_one_wire"
+    }
+}

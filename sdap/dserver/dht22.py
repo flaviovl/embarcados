@@ -45,10 +45,6 @@ date = "%s-%s-%s" % (e.day, e.month, e.year)
 t = time.localtime()
 current_time = time.strftime("%H%M%S", t)
 file = open("humidityValues" + date + "_" + current_time + ".txt", "w")
-
-# you can pass DHT22 use_pulseio=False if you wouldn't like to use pulseio.
-# This may be necessary on a Linux single board computer like the Raspberry Pi,
-# but it will not work in CircuitPython.
 # dhtDevice = adafruit_dht.DHT22(board.D18, use_pulseio=False)
 
 while True:

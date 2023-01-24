@@ -6,7 +6,7 @@ KI = 0.2
 KD = 400
 
 
-class PID:
+class PIDController:
     def __init__(self, kp=KP, ki=KI, kd=KD):
         self.kp = kp
         self.ki = ki
@@ -20,7 +20,7 @@ class PID:
         self.ki = ki
         self.kd = kd
 
-    def update_ref_temp(self, ref_temp):
+    def update_reference_temperature(self, ref_temp):
         self.ref_temp = ref_temp
 
     def pid_control(self, current_temp):
@@ -39,14 +39,14 @@ class PID:
         I = self.ki * self.sum_error
         D = self.kd * delta_error
 
-        signal_control = P + I + D
+        control_signal = P + I + D
 
-        if signal_control > MAX_CONTROL_SIGNAL:
-            signal_control = MAX_CONTROL_SIGNAL
+        if control_signal > MAX_CONTROL_SIGNAL:
+            control_signal = MAX_CONTROL_SIGNAL
 
-        elif signal_control < MIN_CONTROL_SIGNAL:
-            signal_control = MIN_CONTROL_SIGNAL
+        elif control_signal < MIN_CONTROL_SIGNAL:
+            control_signal = MIN_CONTROL_SIGNAL
 
         self.last_error = current_error
 
-        return signal_control
+        return control_signal

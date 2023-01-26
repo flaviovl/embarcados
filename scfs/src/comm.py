@@ -9,7 +9,7 @@ class ModbusUart:
         self.crc16_table = self.create_crc16_table()
         self.serial_com = self.config_port()
         self.open_serial_port()
-        
+
     def config_port(self, baudrate=9600):
         while True:
             try:
@@ -20,16 +20,15 @@ class ModbusUart:
                 sleep(1)
 
             else:
-                print("Uart serial port opened")
                 return serial_port
-    
-    def open_serial_port(self)
+
+    def open_serial_port(self):
         if self.serial_com.isOpen() == False:
             self.serial_com.open()
 
     def close_serial_port(self):
         self.serial_com.close()
-    
+
     def read_data(self, bytes):
         return self.serial_com.read(bytes)
 
@@ -58,10 +57,10 @@ class ModbusUart:
             crc = self.crc16_table[(crc ^ a) & 0xFF] ^ (crc >> 8)
 
         return crc
-    
-    
+
     def crc16(self, data):
-        crc = 0xFFFF
+        # crc = 0xFFFF
+        crc = 0x0000
         for i in range(len(data)):
             crc = crc ^ data[i]
             for _ in range(8):
@@ -70,19 +69,16 @@ class ModbusUart:
                 else:
                     crc >>= 1
         return crc
-
+        # byte1 = crc >> 8
+        # byte2 = crc & 0xFF
+        # return [byte2, byte1]
 
     def validade_crc(self, message):
         end_data = len(message) - 2
         data = message[:end_data]
         rec_crc = message[end_data:]
 
-        calc_crc = self.calc_crc16(data)
+        calc_crc = self.crc16(data)
+        calc_crc = [calc_crc & 0xFF, calc_crc >> 8]
 
-        byte1 = calc_crc >> 8
-        byte2 = calc_crc & 0xFF
-
-        calc_crc = [byte2, byte1]
-    
-        print(rec_crc, calc_crc)
         return rec_crc == calc_crc

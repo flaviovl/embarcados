@@ -1,9 +1,10 @@
 MAX_CONTROL_SIGNAL = 100
 MIN_CONTROL_SIGNAL = -100
 SAMPLE_PERIOD = 1  # Período de Amostragem (ms)
-KP = 30
+KP = 30.0
 KI = 0.2
-KD = 400
+KD = 400.0
+T = 1  # 1ms (freq = 1000)
 
 
 class PIDController:
@@ -49,4 +50,4 @@ class PIDController:
 
         self.last_error = current_error
 
-        return control_signal
+        return int(control_signal)

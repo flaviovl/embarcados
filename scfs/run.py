@@ -95,7 +95,7 @@ def curve_mode(oven, pid, pwm):
     console.line(),
     print(
         Panel(
-            f"[#4682B4]Adjust to start temperature:[green{init_temp}°",
+            f"[#4682B4]Adjust to start temperature:[green]{init_temp}°",
             style="#4F4F4F",
             border_style="#A9A9A9",
             width=100,
@@ -269,9 +269,10 @@ def set_temperature(oven, pid, pwm, tr, delay=0.5):
             pid.update_reference_temperature(tr)
             pid_sig = pid.pid_control(ti)
             oven.send_control_signal(pid_sig)
+            oven.send_external_temperature(te)
 
             msg = pwm.update_duty_cycle(pid_sig)
-            desc = f"[dark]{msg} [red]{ti:.1f}°[/]/[green]{tr}°"
+            desc = f"{msg} [red][{ti:.1f}°[/]/[#808000]]{tr}°[/]"
             error = ti - tr
             adv = abs(last_error - error)
             progress.update(task1, advance=adv, description=desc)
@@ -303,9 +304,10 @@ def set_time(oven, pid, pwm, period, tr, delay=0.5):
             pid.update_reference_temperature(tr)
             pid_sig = pid.pid_control(ti)
             oven.send_control_signal(pid_sig)
+            oven.send_external_temperature(te)
 
             msg = pwm.update_duty_cycle(pid_sig)
-            desc = f"[dark]{msg} [red]{ti:.1f}°[/]/[green]{tr}°\n\n[[red]CTRL-C[/]] to exit"
+            desc = f"{msg} [red]{ti:.1f}°/{tr}°\n[CTRL-C] to exit"
 
             sleep(delay)
 

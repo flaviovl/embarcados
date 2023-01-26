@@ -1,7 +1,6 @@
 import struct
 from time import sleep
 
-from bme280 import read_bme280
 from src.comm import ModbusUart
 from src.config import (
     GET_INTERNAL_TEMPERATURE,
@@ -21,6 +20,8 @@ from src.config import (
     SEND_SYSTEM_STATUS_OFF,
     SEND_SYSTEM_STATUS_ON,
 )
+
+from .bme_280 import get_temp_bme280
 
 
 class OvenController:
@@ -81,7 +82,7 @@ class OvenController:
         self.send_message(message, NO_REPLY)
 
     def read_external_temperature(self):
-        return read_bme280()
+        return get_temp_bme280()
 
     def read_internal_temperature(self):
         reply = self.send_message(GET_INTERNAL_TEMPERATURE)

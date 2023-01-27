@@ -1,7 +1,7 @@
 ## Trabalho 2 - Sistema de Controle Forno de Soldagem - SCFS
 
 ---
-<p align="center"> <img src="imgs/capa.svg" width="100%"></p>
+<p align="center"> <img src="imgs/fse_scfs.svg" width="100%"></p>
 
 ---
 
@@ -43,18 +43,25 @@
 * smbus2
 
 <br />  
-### 5. Guia de instalação
-*Clone esse repositório em uma raspberry PI.
+
+### 5. Guia de instalação  
+
+*Clone esse repositório em uma raspberry PI.  
+
 ```
 git clone https://github.com/flaviovl/embarcados/
 cd embarcados/scfs
 ```
-* Crie e ative um virtualenv com Python 3.
+
+* Crie e ative um virtualenv com Python 3.  
+
 ```
 python3 -m venv .venv
 source .venv/bin/activate
 ```
-* Instale as dependências.
+
+* Instale as dependências.  
+
 ```
 pip install -r requirements.txt
 ```
@@ -92,13 +99,13 @@ Assim que iniciar o programa estrá no menu principal com as seguintes opçoes.
 #### 6.1 Experimento de temperatura fixa
 
 Temperatura definida manualmente através do seletor de temperatura no dashboard (Thingsboad)
-<p align="center"> <img src="imgs/experimento_tr_fixa.svg" width=95%></p>
+<p align="center"> <img src="imgs/experimento_tr_fixa.png" width=100%></p>
 <br />  
 
 #### 6.1 Experimento de temperatura variável
 
 Temperatura automaticamente seguindo uma curva de temperatura pré-definida em arquivo de configuração ([Arquivo da Curva](./curva_reflow.csv)).
-<p align="center"> <img src="imgs/experimento_curva.svg" width=95%></p>
+<p align="center"> <img src="imgs/experimento_curva.svg" width=100%></p>
 <br />  
 
 obs: Outras imagens do experimento na pasta imgs.

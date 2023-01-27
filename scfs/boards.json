@@ -1,0 +1,30 @@
+{
+    "rasp48": {
+        "board": "rasp48",
+        "oven": "01",
+        "host": "164.41.98.27",
+        "port_ssh": "13508",
+        "dashboard": "http://164.41.98.25:443/dashboard/c3a65c80-8c9c-11ed-9d4a-21d2142c9feb?publicId=ba042a80-0322-11ed-9f25-414fbaf2b065"
+    },
+    "rasp44": {
+        "board": "rasp44",
+        "oven": "02",
+        "host": "164.41.98.26",
+        "port_ssh": "13508",
+        "dashboard": "http://164.41.98.25:443/dashboard/003c3ae0-9128-11ed-9d4a-21d2142c9feb?publicId=ba042a80-0322-11ed-9f25-414fbaf2b065"
+    },
+    "rasp47": {
+        "board": "rasp47",
+        "oven": "03",
+        "host": "164.41.98.29",
+        "port_ssh": "13508",
+        "dashboard": "http://164.41.98.25:443/dashboard/9f81d7d0-8e09-11ed-9d4a-21d2142c9feb?publicId=ba042a80-0322-11ed-9f25-414fbaf2b065"
+    },
+    "rasp42": {
+        "board": "rasp42",
+        "oven": "04",
+        "host": "164.41.98.16",
+        "port_ssh": "13508",
+        "dashboard": "http://164.41.98.25:443/dashboard/02170010-9101-11ed-9d4a-21d2142c9feb?publicId=ba042a80-0322-11ed-9f25-414fbaf2b065"
+    }
+}

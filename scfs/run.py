@@ -17,61 +17,65 @@ from src.config import (
     TOGGLE_MODE,
     TURN_OFF_OVEN,
     TURN_ON_OVEN,
+    FILE_LOG,
+    FILE_REFLOW_CURVE
 )
-from utils import read_csv, write_csv
+from utils import read_csv, write_csv, get_board_config
 
 console = Console(width=100)
 prompt = Prompt()
 
 
 def run_command(command, oven, pid, pwm):
-
+    now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    
     if command == TURN_ON_OVEN:
         if oven.system_status:
-            print("[yellow bold]⚠ [yellow]The system is already ON")
+            print(f"[black]{now}   [yellow bold]⚠ [yellow]The system is already ON")
         else:
-            oven.set_system_power(True)
-            print("[green bold]↗ [green]System ON")
+            oven.set_system_power(ON)
+            print(f"[black]{now}   [green bold]↗ [green]System ON")
 
     elif command == TURN_OFF_OVEN:
         if oven.system_status:
-            print("[red bold]↘ [red]System OFF")
+            print(f"[black]{now}   [red bold]↘ [red]System OFF")
             oven.set_control_mode(DASHBOARD)
-            oven.set_operation(False)
-            oven.set_system_power(False)
+            oven.set_operation(OFF)
+            oven.set_system_power(OFF)
         else:
-            print("[yellow bold]⚠ [yellow]The system is already OFF")
+            print(f"[black]{now}   [yellow bold]⚠ [yellow]The system is already OFF")
 
         return CANCEL
 
     elif command == START_OPER:
         if oven.system_status and not oven.operation_status:
-            print("[green bold]↗ [green]Operation started")
+            print(f"[black]{now}   [green bold]↗ [green]Operation started")
             oven.set_operation(ON)
             oven.set_control_mode(oven.control_mode)
             pwm.start()
             return ON
         else:
             print(
-                "[yellow bold]⚠ [/]It is [red]not possible to start[/] operation with the oven switched off"
+                f"[black]{now}   [yellow bold]⚠ [/]It is [red]not possible to start[/] operation with the oven switched off"
             )
 
     elif command == STOP_OPER:
         if oven.operation_status:
-            print("[red bold dark]↘ [red]Operation OFF")
+            print(f"[black]{now}   [red bold dark]↘ [red]Operation OFF")
             oven.set_operation(OFF)
             oven.set_control_mode(OFF)
             pwm.stop()
         else:
             print(
-                "[yellow bold]⚠ [/]It is [red]not possible to stop working[/] when it is not working"
+                f"[black]{now}   [yellow bold]⚠ [/]It is [red]not possible to stop working[/] when it is not working"
             )
 
         return CANCEL
 
     elif command == TOGGLE_MODE:
+        pwm.start()
         if oven.operation_status:
-            print("It is [yellow]not possible to change modes[/] with the oven in operation")
+            print(f"[black]{now}   It is [yellow]not possible to change modes[/] with the oven in operation")
 
         elif oven.control_mode == CURVE:
             oven.set_control_mode(DASHBOARD)
@@ -84,43 +88,52 @@ def run_command(command, oven, pid, pwm):
 
 
 def curve_mode(oven, pid, pwm):
-    oven.set_system_power(True)
-    oven.set_operation(True)
+    oven.set_system_power(ON)
+    sleep(0.2)
+    oven.set_operation(ON)
+    sleep(0.2)
+    pwm.start()
+    
     console.line()
-    console.rule("Curve Mode")
+    console.rule("CURVE MODE")
 
-    rows = iter(read_csv())
-    _, init_temp = next(rows)
+    rows = iter(read_csv(FILE_REFLOW_CURVE))
+    pre_period, init_temp = next(rows)
 
-    console.line(),
+    # console.line(),
     print(
         Panel(
-            f"[#4682B4]Adjust to start temperature:[green]{init_temp}°",
+            f"[yellow]⏲ [/][#4682B4] Adjust to start temperature:[green]{init_temp}°[red] 🌡 [blue](+- 1°)",
             style="#4F4F4F",
-            border_style="#A9A9A9",
+            border_style="black",
+            width=100,
+        )
+    )
+    console.line()     
+    oven.send_reference_temperature(float(init_temp))
+    set_temperature(oven, pid, pwm, float(init_temp))
+    console.line()
+    
+    print(
+        Panel(
+            "[yellow]〰[/] Start following a predefined temperature curve",
+            style="#4682B4",
+            border_style="black",
             width=100,
         )
     )
     console.line()
 
-    oven.send_reference_temperature(float(init_temp))
-    set_temperature(oven, pid, pwm, float(init_temp))
-
-    console.line(2)
-    console.rule(style="#4682B4")
-    console.print("[red]〽[/] Start following a predefined temperature curve", style="grey58")
-    console.rule(style="#4682B4")
-    console.line(2)
-
     while True:
         period, temperature = next(rows)
+        interval = int(period) - int(pre_period)
+        pre_period = period
         tr = float(temperature)
 
-        print(f"[#4682B4]Predefined temperature: [grey58 bold][{tr:.0f}° in {period}s]")
+        print(f"[yellow]➤ [grey58]Predefined curve: [/]{period}s")
 
         oven.send_reference_temperature(tr)
-        set_time(oven, pid, pwm, period, tr)
-        console.line(2)
+        set_time(oven, pid, pwm, interval, tr)
         console.rule(style="black")
 
 
@@ -129,21 +142,23 @@ def dash_mode(oven, pid, pwm):
     console.rule("Dashboard Mode")
     print("[#4682B4]Starting control on the dashboard!!")
     console.line()
-
+    
+    
     while True:
         command = oven.read_command()
         run = run_command(command, oven, pid, pwm)
-
         tr = oven.read_reference_temperature()
         ti = oven.read_internal_temperature()
         te = oven.read_external_temperature()
         pid.update_reference_temperature(tr)
 
         if oven.operation_status:
+            oven.send_external_temperature(float(te))
             pid_sig = pid.pid_control(ti)
             oven.send_control_signal(pid_sig)
             msg = pwm.update_duty_cycle(pid_sig)
-            print(f"[dark]{msg} [blue]{ti:.1f}°[/] / [green]{tr}°")
+            now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            print(f"[black]{now} - {msg} [#FF0000 bold]{ti:.1f}°[/] | [#006400]{tr}°[/]")
 
         sleep(0.5)
 
@@ -266,13 +281,14 @@ def set_temperature(oven, pid, pwm, tr, delay=0.5):
         while not progress.finished:
             ti = oven.read_internal_temperature()
             te = oven.read_external_temperature()
-            pid.update_reference_temperature(tr)
+            pid.update_reference_temperature(tr)    
+           
             pid_sig = pid.pid_control(ti)
             oven.send_control_signal(pid_sig)
             oven.send_external_temperature(te)
-
             msg = pwm.update_duty_cycle(pid_sig)
-            desc = f"{msg} [red][{ti:.1f}°[/]/[#808000]]{tr}°[/]"
+            
+            desc = f"{msg}[black][red]{ti:.1f}°[/]/[green]{tr}°[/]\n\n\n"
             error = ti - tr
             adv = abs(last_error - error)
             progress.update(task1, advance=adv, description=desc)
@@ -284,16 +300,16 @@ def set_temperature(oven, pid, pwm, tr, delay=0.5):
             run = run_command(command, oven, pid, pwm)
             if run == CANCEL:
                 continue
+        
+        progress.update(task1, description="[green bold]✔ Done!")
 
-
-def set_time(oven, pid, pwm, period, tr, delay=0.5):
+def set_time(oven, pid, pwm, interval, tr, delay=0.5):
 
     with Progress() as progress:
-        total = int(period)
         start_time = perf_counter()
         last_time = start_time
-
-        task1 = progress.add_task("[green]Processing...", total=total)
+        
+        task1 = progress.add_task("[green]Processing...", total=interval)
 
         while not progress.finished:
             command = oven.read_command()
@@ -307,7 +323,7 @@ def set_time(oven, pid, pwm, period, tr, delay=0.5):
             oven.send_external_temperature(te)
 
             msg = pwm.update_duty_cycle(pid_sig)
-            desc = f"{msg} [red]{ti:.1f}°/{tr}°\n[CTRL-C] to exit"
+            desc = f"{msg}[black][red]{ti:.1f}°[/]/[green]{tr}°[/]\n\n\n"
 
             sleep(delay)
 
@@ -316,8 +332,8 @@ def set_time(oven, pid, pwm, period, tr, delay=0.5):
 
             progress.update(task1, advance=adv, description=desc)
 
-            now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+            now = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             row_log = [now, ti, te, tr, pid_sig]
-            write_csv(row_log)
+            write_csv(row_log, FILE_LOG)
 
         progress.update(task1, description="[green bold]✔ Done!")

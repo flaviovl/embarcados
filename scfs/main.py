@@ -7,7 +7,8 @@ from src.comm import ModbusUart
 from src.controller import OvenController
 from src.pid import PIDController
 from src.pwm import PWMController
-from utils import msg_down, msg_init
+from utils import msg_down, msg_init, get_board_config
+from src.config import CONFIG_BOARD
 
 prompt = Prompt()
 
@@ -28,7 +29,9 @@ if __name__ == "__main__":
     pid = PIDController()
     pwm = PWMController()
     oven = OvenController(mbu)
-    msg_init()
+    board = get_board_config(CONFIG_BOARD)
+    msg_init(board)
+    
 
     while True:
         control_mode = prompt.ask(

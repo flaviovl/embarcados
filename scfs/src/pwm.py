@@ -26,11 +26,11 @@ class PWMController:
 
     def update_duty_cycle(self, duty_cycle):
         if duty_cycle >= 0:
-            msg = f"[red]♨ [/][#E9967A]Heating {duty_cycle:>3}%[red bold]  ⤴ [/]"
+            msg = f"[red bold]♨ [#FAEBD7]Heating [#FA8072]{duty_cycle:>3}%[red bold] ⬆ [/]"  
             self.pwm_cooler.ChangeDutyCycle(0)
             self.pwm_resistor.ChangeDutyCycle(duty_cycle)
         else:
-            msg = f"[blue bold]❄ [/][#008B8B]Cooling [#B0E0E6]{-duty_cycle:>3}%  ⤵ [/]"
+            msg = f"[#B0E0E6]❄ Cooling [#008B8B]{-duty_cycle:>3}%[/] ⬇ [/]"
             self.pwm_resistor.ChangeDutyCycle(0)
 
             if -duty_cycle < 40:

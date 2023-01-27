@@ -4,7 +4,7 @@ from enum import Enum
 # =============================================================================================================================================
 # Protocolo de comunicação com crc calculado - Mensagens fixas
 # =============================================================================================================================================
-
+ 
 READ_COMMAND = b"\x01\x23\xC3\x05\x06\x08\x02\x35\x4e"
 GET_INTERNAL_TEMPERATURE = b"\x01\x23\xC1\x05\x06\x08\x02\x4c\x8e"
 GET_REFERENCE_TEMPERATURE = b"\x01\x23\xC2\x05\x06\x08\x02\x08\x8e"
@@ -40,3 +40,6 @@ CURVE = 1
 TERMINAL = 1
 DASHBOARD = 0
 CANCEL = -1
+CONFIG_BOARD = "boards.json"
+FILE_LOG = "logs/logs.csv"
+FILE_REFLOW_CURVE = "curva_reflow.csv"

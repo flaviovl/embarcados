@@ -21,7 +21,7 @@ from src.config import (
     SEND_SYSTEM_STATUS_ON,
 )
 
-from .bme_280 import get_temp_bme280
+from .bme280 import get_temp_bme280
 
 
 class OvenController:

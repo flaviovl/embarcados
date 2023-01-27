@@ -21,7 +21,7 @@
 
 ### 3. Arquitetura do Sistema
 
-<p align="center"> <img src="imgs/arquitetura.png" width=80%></p>
+<p align="center"> <img src="imgs/diagrama_arquitetura.png" width=60%></p>
 <br />
 
 #### 3.1 Componentes do Sistema
